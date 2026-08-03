@@ -283,19 +283,23 @@ bgMusic.volume = CONFIG.musicVolume;
 
 let musicUnlocked = false;
 
+const unlockEvents = ['click', 'touchend', 'keydown'];
+
 function startMusic() {
   if (musicUnlocked) return;
   bgMusic.play().then(() => {
     musicUnlocked = true;
     musicToggle.textContent = '🔇';
+    unlockEvents.forEach(evt => document.removeEventListener(evt, startMusic));
   }).catch(() => {
-    // autoplay bloqueado ou arquivo ainda não adicionado; ela pode tentar pelo botão
+    // ainda bloqueado (ou arquivo não encontrado); tenta de novo no próximo gesto
   });
 }
 
 // tenta iniciar assim que ela interagir com a página pela primeira vez
-['pointerdown', 'keydown', 'touchend'].forEach(evt => {
-  document.addEventListener(evt, startMusic, { once: true });
+// (click/touchend/keydown contam como gesto do usuário pros navegadores; pointerdown/touchstart não contam)
+unlockEvents.forEach(evt => {
+  document.addEventListener(evt, startMusic);
 });
 
 musicToggle.addEventListener('click', () => {
