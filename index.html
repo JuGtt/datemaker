@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Ju &amp; Jenni 💕</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='28'%3E%E2%9D%A4%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="hearts-bg" aria-hidden="true"></div>
+
+<button id="music-toggle" title="Música">🎵</button>
+
+<div id="aura-counter" class="aura-counter" hidden>
+  <span>✨ Aura farmada: <strong id="aura-value">0</strong></span>
+</div>
+
+<main id="app">
+
+  <section id="screen-ask" class="screen active">
+    <p class="eyebrow">Ei momozi...</p>
+    <h1>Você quer sair comigo?</h1>
+    <p class="joke-tag">(essa é sua chance de farmar muita aura comigo 67 67)</p>
+
+    <div class="button-row">
+      <button id="btn-yes" class="btn btn-yes" type="button">Tá bom..</button>
+      <button id="btn-no" class="btn btn-no" type="button">Não</button>
+    </div>
+  </section>
+
+  <section id="screen-pick" class="screen">
+    <p class="eyebrow">AURA +9999 🎉</p>
+    <h1>Sabia que tu ia querer gostosa pelada</h1>
+    <p class="subtitle">Agora escolhe o dia e o horário meu amor:</p>
+
+    <div class="picker">
+      <label for="date-input">Dia</label>
+      <input type="date" id="date-input">
+
+      <label>Horário</label>
+      <div id="slot-list" class="slot-list"></div>
+    </div>
+
+    <button id="btn-confirm" class="btn btn-yes" type="button" disabled>Confirmar encontro 💫</button>
+  </section>
+
+  <section id="screen-done" class="screen">
+    <p class="eyebrow">Combinado! 🎉💕</p>
+    <h1 id="summary-line">—</h1>
+    <p class="subtitle">Aura total farmada nesse date: <strong>∞</strong></p>
+
+    <div class="action-col">
+      <a id="btn-whatsapp" class="btn btn-whatsapp" target="_blank" rel="noopener">📲 Enviar pro Ju no WhatsApp</a>
+      <a id="btn-gcal" class="btn btn-secondary" target="_blank" rel="noopener">📅 Adicionar ao Google Calendar</a>
+    </div>
+
+    <p class="footer-credit">feito com 💻 e muita aura por Ju</p>
+  </section>
+
+</main>
+
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<script src="script.js"></script>
+</body>
+</html>
