@@ -4,6 +4,8 @@ const CONFIG = {
   dateRangeDays: 14,               // até quantos dias no futuro ela pode escolher
   timeSlots: ['19:00', '20:00', '21:00', '22:00'],
   eventDurationHours: 2,
+  musicFile: 'music.mp3',          // arquivo de música (coloque na mesma pasta do index.html)
+  musicVolume: 0.5,
 };
 // =====================================
 
@@ -273,58 +275,36 @@ function launchConfetti() {
   tick();
 }
 
-// ---------- Música (gerada via Web Audio, sem arquivos externos) ----------
-let audioCtx = null;
-let musicPlaying = false;
-let musicTimer = null;
+// ---------- Música ----------
+const musicToggle = document.getElementById('music-toggle');
+const bgMusic = document.getElementById('bg-music');
+bgMusic.src = CONFIG.musicFile;
+bgMusic.volume = CONFIG.musicVolume;
 
-const noteFreq = {
-  C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00,
-  A4: 440.00, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25,
-};
+let musicUnlocked = false;
 
-const melody = [
-  ['E4', 0.4], ['G4', 0.4], ['A4', 0.4], ['G4', 0.4],
-  ['E4', 0.4], ['D4', 0.4], ['C4', 0.6],
-  ['D4', 0.4], ['E4', 0.4], ['D4', 0.4], ['C4', 0.8],
-];
-
-function playNote(freq, time, duration) {
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0, time);
-  gain.gain.linearRampToValueAtTime(0.12, time + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-  osc.connect(gain).connect(audioCtx.destination);
-  osc.start(time);
-  osc.stop(time + duration + 0.05);
-}
-
-function scheduleMelody() {
-  if (!musicPlaying) return;
-  const startTime = audioCtx.currentTime + 0.05;
-  let t = startTime;
-  let total = 0;
-  melody.forEach(([note, dur]) => {
-    playNote(noteFreq[note], t, dur * 0.9);
-    t += dur;
-    total += dur;
+function startMusic() {
+  if (musicUnlocked) return;
+  bgMusic.play().then(() => {
+    musicUnlocked = true;
+    musicToggle.textContent = '🔇';
+  }).catch(() => {
+    // autoplay bloqueado ou arquivo ainda não adicionado; ela pode tentar pelo botão
   });
-  musicTimer = setTimeout(scheduleMelody, total * 1000);
 }
 
-document.getElementById('music-toggle').addEventListener('click', function () {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (musicPlaying) {
-    musicPlaying = false;
-    clearTimeout(musicTimer);
-    this.textContent = '🎵';
+// tenta iniciar assim que ela interagir com a página pela primeira vez
+['pointerdown', 'keydown', 'touchend'].forEach(evt => {
+  document.addEventListener(evt, startMusic, { once: true });
+});
+
+musicToggle.addEventListener('click', () => {
+  musicUnlocked = true;
+  if (bgMusic.paused) {
+    bgMusic.play();
+    musicToggle.textContent = '🔇';
   } else {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    musicPlaying = true;
-    this.textContent = '🔇';
-    scheduleMelody();
+    bgMusic.pause();
+    musicToggle.textContent = '🎵';
   }
 });
