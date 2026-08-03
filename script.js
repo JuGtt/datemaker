@@ -134,6 +134,7 @@ window.addEventListener('resize', () => {
 
 // ---------- Botão "Sim" ----------
 yesBtn.addEventListener('click', () => {
+  startMusic();
   launchConfetti();
   setTimeout(() => {
     switchScreen('pick');
@@ -283,24 +284,15 @@ bgMusic.volume = CONFIG.musicVolume;
 
 let musicUnlocked = false;
 
-const unlockEvents = ['click', 'touchend', 'keydown'];
-
 function startMusic() {
   if (musicUnlocked) return;
   bgMusic.play().then(() => {
     musicUnlocked = true;
     musicToggle.textContent = '🔇';
-    unlockEvents.forEach(evt => document.removeEventListener(evt, startMusic));
   }).catch(() => {
-    // ainda bloqueado (ou arquivo não encontrado); tenta de novo no próximo gesto
+    // ainda bloqueado (ou arquivo não encontrado); ela pode tentar pelo botão
   });
 }
-
-// tenta iniciar assim que ela interagir com a página pela primeira vez
-// (click/touchend/keydown contam como gesto do usuário pros navegadores; pointerdown/touchstart não contam)
-unlockEvents.forEach(evt => {
-  document.addEventListener(evt, startMusic);
-});
 
 musicToggle.addEventListener('click', () => {
   musicUnlocked = true;
